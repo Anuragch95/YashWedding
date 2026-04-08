@@ -1,0 +1,8 @@
+[build]
+  command = "npm install && npx vite build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.22.2"
+  NPM_VERSION = "10.9.7"
+  NODE_ENV = "production"

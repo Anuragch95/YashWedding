@@ -376,12 +376,14 @@ export default function App() {
   const soundRef = useRef(null);
 
   const ensureHowl = () => {
+    if (typeof window === 'undefined') return;
     if (!sharedHowl) {
       sharedHowl = new Howl({
         src: [weddingConfig.audio.url],
         html5: true,
         loop: true,
-        volume: weddingConfig.audio.volume
+        volume: weddingConfig.audio.volume,
+        autoplay: false
       });
     }
     soundRef.current = sharedHowl;
