@@ -38,7 +38,7 @@ const weddingConfig = {
       date: "25 April 2026 (Saturday)",
       time: "Morning",
       location: "Residence – Dwarka Nagar, Seoni",
-      icon: "🏠",
+      icon: "💍",
       mapsEmbed: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d408.6717062161129!2d79.53898985629326!3d22.07725790821654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sin!4v1775728303491!5m2!1sen!2sin",
       navigateLink: "https://www.google.com/maps/dir/?api=1&destination=Dwarka+Nagar+Seoni"
     },
@@ -48,7 +48,7 @@ const weddingConfig = {
       time: "Evening onwards",
       location: "Ashirwad Palace, Seoni",
       address: "Behind Honda Agency, Jyarat Naka, Seoni",
-      icon: "💃",
+      icon: "💍",
       mapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d648.6150390715444!2d79.5473988377295!3d22.101387057187605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a2aaf104107a427%3A0xcd0c6d20857f0b71!2sAashirwad%20palace!5e1!3m2!1sen!2sin!4v1775728251225!5m2!1sen!2sin",
       navigateLink: "https://www.google.com/maps/dir/?api=1&destination=Ashirwad+Palace+Seoni"
     },
