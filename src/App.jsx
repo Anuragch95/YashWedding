@@ -6,15 +6,56 @@ import { useCountdown } from './hooks/useCountdown';
 
 let sharedHowl = null;
 
+// --- Components ---
+
+const FallingPetals = () => {
+  const petals = Array.from({ length: 12 });
+  return (
+    <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden">
+      {petals.map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ 
+            y: -100, 
+            x: Math.random() * 100 + "%", 
+            rotate: 0,
+            opacity: 0 
+          }}
+          animate={{ 
+            y: "110vh", 
+            x: (Math.random() * 100 - 10) + "%", 
+            rotate: 360,
+            opacity: [0, 0.7, 0.7, 0] 
+          }}
+          transition={{ 
+            duration: Math.random() * 10 + 10, 
+            repeat: Infinity, 
+            delay: Math.random() * 20,
+            ease: "linear"
+          }}
+          className="absolute text-rose-300/40 text-2xl"
+        >
+          🌸
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 const SectionDivider = () => (
-  <div className="flex justify-center items-center py-12">
-    <div className="h-[1px] w-12 bg-gold/40"></div>
-    <div className="mx-4 text-gold opacity-60">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+  <div className="flex justify-center items-center py-12 relative">
+    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+      <svg width="100%" height="100" viewBox="0 0 1200 100" preserveAspectRatio="none">
+        <path d="M0,50 Q300,0 600,50 T1200,50" fill="none" stroke="currentColor" strokeWidth="1" />
       </svg>
     </div>
-    <div className="h-[1px] w-12 bg-gold/40"></div>
+    <div className="h-[1px] w-16 bg-gold/30"></div>
+    <div className="mx-6 text-gold opacity-40">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+        <path d="M12 2L14.5 9H21L15.5 13.5L18 21L12 16.5L6 21L8.5 13.5L3 9H9.5L12 2Z" />
+      </svg>
+    </div>
+    <div className="h-[1px] w-16 bg-gold/30"></div>
   </div>
 );
 
@@ -25,53 +66,63 @@ const Hero = ({ onExplore }) => {
   const opacity = useTransform(scrollY, [0, 500], [1, 0]);
   
   return (
-    <section id="hero" className="relative h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden pt-20">
       <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
         <img 
-          src={weddingConfig.gallery[0]} 
+          src={weddingConfig.images.hero} 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-30 scale-110"
+          className="w-full h-full object-cover opacity-60 scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/80 via-transparent to-cream"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-cream/30 via-transparent to-cream/80"></div>
       </motion.div>
 
       <motion.div 
         style={{ opacity }}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className="z-10"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="z-10 max-w-4xl"
       >
-        <h2 className="font-playfair text-xl md:text-2xl text-gold mb-4 tracking-widest uppercase italic">
-          {weddingConfig.hero.subtitle}
-        </h2>
-        <h1 className="font-playfair text-5xl md:text-8xl text-maroon mb-6 leading-tight">
-          {weddingConfig.hero.title}
+        <div className="mb-8 inline-block px-6 py-2 border-y border-gold/30">
+          <span className="font-poppins text-xs tracking-[0.4em] uppercase text-gold">Save The Date</span>
+        </div>
+        
+        <h1 className="font-playfair text-6xl md:text-9xl text-maroon mb-8 leading-tight tracking-tight">
+          {weddingConfig.names.groom} <span className="text-gold italic">&</span> {weddingConfig.names.bride}
         </h1>
-        <p className="font-playfair text-2xl md:text-3xl text-maroon/80 mb-12 italic">
-          {weddingConfig.displayDate}
-        </p>
+        
+        <div className="font-playfair text-xl md:text-3xl text-maroon/70 mb-16 italic tracking-wide">
+          Are getting married on {weddingConfig.displayDate}
+        </div>
 
         {/* Countdown */}
-        <div className="flex gap-4 md:gap-8 justify-center mb-12">
+        <div className="grid grid-cols-4 gap-4 md:gap-12 justify-center mb-20 max-w-2xl mx-auto">
           {[
             { label: 'Days', value: days },
             { label: 'Hours', value: hours },
             { label: 'Mins', value: minutes },
             { label: 'Secs', value: seconds },
           ].map((item, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <span className="text-3xl md:text-4xl font-playfair text-maroon">{item.value.toString().padStart(2, '0')}</span>
-              <span className="text-xs uppercase tracking-widest text-gold mt-1 font-poppins">{item.label}</span>
-            </div>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + (i * 0.1) }}
+              className="flex flex-col items-center"
+            >
+              <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full border border-gold/20 mb-3 bg-white/30 backdrop-blur-sm">
+                <span className="text-2xl md:text-4xl font-playfair text-maroon">{item.value.toString().padStart(2, '0')}</span>
+              </div>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-poppins">{item.label}</span>
+            </motion.div>
           ))}
         </div>
 
         <motion.button
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.05, letterSpacing: "0.3em" }}
           whileTap={{ scale: 0.95 }}
           onClick={onExplore}
-          className="bg-maroon text-cream px-10 py-4 rounded-full font-poppins text-sm tracking-widest uppercase hover:bg-maroon/90 transition-colors shadow-lg"
+          className="bg-maroon text-cream px-12 py-5 rounded-full font-poppins text-xs tracking-[0.2em] uppercase hover:bg-maroon/90 transition-all shadow-2xl border border-gold/30"
         >
           {weddingConfig.hero.buttonText}
         </motion.button>
@@ -80,9 +131,10 @@ const Hero = ({ onExplore }) => {
       <motion.div 
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-gold opacity-50"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-gold opacity-40 cursor-pointer"
+        onClick={onExplore}
       >
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
           <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
         </svg>
       </motion.div>
@@ -91,83 +143,140 @@ const Hero = ({ onExplore }) => {
 };
 
 const Couple = () => (
-  <section id="couple" className="py-20 px-4 max-w-6xl mx-auto">
+  <section id="couple" className="py-24 px-6 max-w-6xl mx-auto overflow-hidden">
     <SectionDivider />
-    <h2 className="text-center font-playfair text-4xl md:text-5xl text-maroon mb-16 italic">The Happy Couple</h2>
+    <motion.h2 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-center font-playfair text-5xl md:text-7xl text-maroon mb-20 italic"
+    >
+      Meet The Couple
+    </motion.h2>
     
-    <div className="grid md:grid-cols-2 gap-12 md:gap-24">
+    <div className="grid md:grid-cols-2 gap-16 md:gap-32 items-center">
       {/* Groom */}
       <motion.div 
-        initial={{ opacity: 0, x: -50 }}
+        initial={{ opacity: 0, x: -100 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="text-center"
+        transition={{ duration: 1, type: "spring" }}
+        className="text-center relative group"
       >
-        <div className="relative mb-8 inline-block group">
-          <div className="absolute -inset-2 border border-gold/30 rounded-full transition-transform group-hover:scale-105"></div>
-          <img src={weddingConfig.couple.groom.image} alt={weddingConfig.names.groom} className="w-64 h-64 object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700" />
+        <div className="relative mb-10 inline-block">
+          <div className="absolute -inset-4 border border-gold/20 rounded-full transition-transform duration-700 group-hover:rotate-45 group-hover:scale-110"></div>
+          <div className="absolute -inset-2 border-2 border-gold/40 rounded-full"></div>
+          <img 
+            src={weddingConfig.images.groom} 
+            alt={weddingConfig.names.groom} 
+            className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-full shadow-2xl transition-all duration-700 group-hover:grayscale-0 grayscale-[30%]" 
+          />
         </div>
-        <h3 className="font-playfair text-3xl text-maroon mb-2">{weddingConfig.couple.groom.name}</h3>
-        <p className="text-gold uppercase tracking-widest text-xs mb-4">The Groom</p>
-        <p className="text-maroon/60 font-poppins text-sm leading-relaxed max-w-xs mx-auto italic">
-          {weddingConfig.couple.groom.parents}
-        </p>
+        <h3 className="font-playfair text-4xl text-maroon mb-3 tracking-wide">{weddingConfig.couple.groom.name}</h3>
+        <p className="text-gold uppercase tracking-[0.3em] text-[10px] mb-6 font-poppins font-semibold">The Groom</p>
+        <div className="max-w-xs mx-auto">
+          <p className="text-maroon/60 font-playfair text-lg leading-relaxed italic border-t border-gold/10 pt-4">
+            {weddingConfig.couple.groom.parents}
+          </p>
+        </div>
       </motion.div>
 
       {/* Bride */}
       <motion.div 
-        initial={{ opacity: 0, x: 50 }}
+        initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="text-center"
+        transition={{ duration: 1, type: "spring" }}
+        className="text-center relative group"
       >
-        <div className="relative mb-8 inline-block group">
-          <div className="absolute -inset-2 border border-gold/30 rounded-full transition-transform group-hover:scale-105"></div>
-          <img src={weddingConfig.couple.bride.image} alt={weddingConfig.names.bride} className="w-64 h-64 object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700" />
+        <div className="relative mb-10 inline-block">
+          <div className="absolute -inset-4 border border-gold/20 rounded-full transition-transform duration-700 group-hover:-rotate-45 group-hover:scale-110"></div>
+          <div className="absolute -inset-2 border-2 border-gold/40 rounded-full"></div>
+          <img 
+            src={weddingConfig.images.bride} 
+            alt={weddingConfig.names.bride} 
+            className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-full shadow-2xl transition-all duration-700 group-hover:grayscale-0 grayscale-[30%]" 
+          />
         </div>
-        <h3 className="font-playfair text-3xl text-maroon mb-2">{weddingConfig.couple.bride.name}</h3>
-        <p className="text-gold uppercase tracking-widest text-xs mb-4">The Bride</p>
-        <p className="text-maroon/60 font-poppins text-sm leading-relaxed max-w-xs mx-auto italic">
-          {weddingConfig.couple.bride.parents}
-        </p>
+        <h3 className="font-playfair text-4xl text-maroon mb-3 tracking-wide">{weddingConfig.couple.bride.name}</h3>
+        <p className="text-gold uppercase tracking-[0.3em] text-[10px] mb-6 font-poppins font-semibold">The Bride</p>
+        <div className="max-w-xs mx-auto">
+          <p className="text-maroon/60 font-playfair text-lg leading-relaxed italic border-t border-gold/10 pt-4">
+            {weddingConfig.couple.bride.parents}
+          </p>
+        </div>
       </motion.div>
     </div>
   </section>
 );
 
 const Events = () => (
-  <section id="events" className="py-20 bg-beige/30">
-    <div className="max-w-4xl mx-auto px-4">
+  <section id="events" className="py-32 bg-beige/20 relative overflow-hidden">
+    <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-cream to-transparent"></div>
+    <div className="max-w-5xl mx-auto px-6 relative z-10">
       <SectionDivider />
-      <h2 className="text-center font-playfair text-4xl md:text-5xl text-maroon mb-16 italic">Wedding Events</h2>
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center font-playfair text-5xl md:text-7xl text-maroon mb-24 italic"
+      >
+        Wedding Festivities
+      </motion.h2>
       
-      <div className="space-y-12">
+      <div className="relative border-l border-gold/20 ml-4 md:ml-0 md:border-none space-y-24">
         {weddingConfig.events.map((event, i) => (
           <motion.div 
             key={i}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.2 }}
-            className="glass-card p-8 rounded-2xl relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 group hover:shadow-xl transition-shadow"
+            transition={{ duration: 0.8, delay: i * 0.2 }}
+            className={`flex flex-col md:flex-row items-center gap-12 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
           >
-            <div className="text-5xl text-gold/40 group-hover:text-gold transition-colors">{event.icon}</div>
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="font-playfair text-2xl text-maroon mb-2">{event.title}</h3>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-maroon/70 mb-4 font-poppins uppercase tracking-widest">
-                <span>📅 {event.date}</span>
-                <span>⏰ {event.time}</span>
-              </div>
-              <p className="text-maroon/80 font-poppins mb-1 font-semibold">{event.location}</p>
-              {event.address && <p className="text-maroon/60 text-sm font-poppins italic">{event.address}</p>}
-              {event.note && (
-                <div className="mt-4 inline-block px-3 py-1 bg-gold/10 text-gold text-xs rounded-full font-semibold">
-                  Note: {event.note}
+            <div className="flex-1 w-full">
+              <div className={`glass-card p-10 rounded-3xl relative overflow-hidden border border-gold/10 hover:border-gold/30 transition-all duration-500 hover:shadow-2xl group`}>
+                <div className="absolute top-0 right-0 p-6 text-6xl opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700">
+                  {event.icon}
                 </div>
+                
+                <div className="mb-6">
+                  <span className="inline-block px-4 py-1 bg-gold/10 text-gold text-[10px] uppercase tracking-[0.2em] rounded-full mb-4 font-bold">
+                    {event.date}
+                  </span>
+                  <h3 className="font-playfair text-3xl text-maroon mb-2">{event.title}</h3>
+                  <p className="text-gold italic font-playfair text-xl mb-6">{event.time}</p>
+                </div>
+
+                <div className="space-y-4 border-t border-gold/10 pt-6">
+                  <div className="flex items-start gap-4">
+                    <span className="text-gold text-xl">📍</span>
+                    <div>
+                      <p className="text-maroon/80 font-poppins font-semibold">{event.location}</p>
+                      {event.address && <p className="text-maroon/50 text-sm font-poppins italic mt-1">{event.address}</p>}
+                    </div>
+                  </div>
+                  
+                  {event.note && (
+                    <div className="mt-6 flex items-center gap-3 text-gold text-[11px] uppercase tracking-widest font-bold">
+                      <span className="w-8 h-[1px] bg-gold/30"></span>
+                      Note: {event.note}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="hidden md:flex flex-col items-center justify-center relative w-16">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold z-10 bg-white shadow-xl">
+                {i + 1}
+              </div>
+              {i < weddingConfig.events.length - 1 && (
+                <div className="absolute top-12 bottom-[-96px] w-[1px] bg-gradient-to-b from-gold/30 to-transparent"></div>
               )}
             </div>
+            
+            <div className="flex-1 hidden md:block"></div>
           </motion.div>
         ))}
       </div>
@@ -176,52 +285,65 @@ const Events = () => (
 );
 
 const Venue = () => (
-  <section id="venue" className="py-20 px-4">
-    <div className="max-w-5xl mx-auto">
+  <section id="venue" className="py-32 px-6">
+    <div className="max-w-6xl mx-auto">
       <SectionDivider />
-      <h2 className="text-center font-playfair text-4xl md:text-5xl text-maroon mb-16 italic">The Venue</h2>
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center font-playfair text-5xl md:text-7xl text-maroon mb-24 italic"
+      >
+        The Celebration Venue
+      </motion.h2>
       
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="grid lg:grid-cols-2 gap-16 items-center">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="rounded-3xl overflow-hidden shadow-2xl h-[400px] relative group"
+          transition={{ duration: 1 }}
+          className="rounded-[40px] overflow-hidden shadow-2xl h-[500px] relative group border-8 border-white"
         >
           <iframe
             src={weddingConfig.venue.mapsEmbed}
-            className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700 border-none"
+            className="w-full h-full grayscale hover:grayscale-0 transition-all duration-1000 border-none"
             allowFullScreen=""
             loading="lazy"
             title="Venue Location"
           ></iframe>
-          <div className="absolute top-4 left-4 bg-maroon text-cream px-4 py-2 rounded-full text-xs tracking-widest uppercase flex items-center gap-2">
+          <div className="absolute top-8 left-8 bg-maroon text-cream px-6 py-3 rounded-full text-[10px] tracking-[0.2em] uppercase flex items-center gap-3 shadow-2xl border border-gold/30">
             <motion.span 
-              animate={{ y: [0, -3, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
             >📍</motion.span>
-            Milan Garden
+            View on Map
           </div>
         </motion.div>
 
-        <div className="text-center lg:text-left space-y-6">
-          <h3 className="font-playfair text-3xl text-maroon">{weddingConfig.venue.name}</h3>
-          <p className="text-maroon/70 font-poppins leading-relaxed italic">
+        <div className="text-center lg:text-left space-y-10">
+          <div className="inline-block px-6 py-2 bg-gold/5 border border-gold/20 rounded-full">
+            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Main Venue</span>
+          </div>
+          <h3 className="font-playfair text-5xl text-maroon leading-tight">{weddingConfig.venue.name}</h3>
+          <p className="text-maroon/60 font-playfair text-xl leading-relaxed italic max-w-md mx-auto lg:mx-0">
             {weddingConfig.venue.address}
           </p>
-          <motion.a 
-            href={weddingConfig.venue.navigateLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 bg-transparent border-2 border-gold text-gold px-8 py-3 rounded-full font-poppins text-sm tracking-widest uppercase hover:bg-gold hover:text-cream transition-all"
-          >
-            <span>Navigate to Venue</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 3L14.5 21L11.5 12.5L3 9.5L21 3Z" />
-            </svg>
-          </motion.a>
+          <div className="pt-6">
+            <motion.a 
+              href={weddingConfig.venue.navigateLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05, backgroundColor: "#800000", color: "#FFF8EE" }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-4 bg-transparent border-2 border-maroon text-maroon px-10 py-4 rounded-full font-poppins text-xs tracking-[0.2em] uppercase transition-all shadow-xl font-bold"
+            >
+              <span>Get Directions</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M21 3L14.5 21L11.5 12.5L3 9.5L21 3Z" />
+              </svg>
+            </motion.a>
+          </div>
         </div>
       </div>
     </div>
@@ -229,28 +351,37 @@ const Venue = () => (
 );
 
 const Gallery = () => (
-  <section id="gallery" className="py-20 bg-cream">
-    <div className="max-w-6xl mx-auto px-4">
+  <section id="gallery" className="py-32 bg-cream relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-6">
       <SectionDivider />
-      <h2 className="text-center font-playfair text-4xl md:text-5xl text-maroon mb-16 italic">Our Memories</h2>
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center font-playfair text-5xl md:text-7xl text-maroon mb-24 italic"
+      >
+        Cherished Moments
+      </motion.h2>
       
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-        {weddingConfig.gallery.map((img, i) => (
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
+        {weddingConfig.images.gallery.map((img, i) => (
           <motion.div 
             key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="relative group overflow-hidden rounded-2xl"
+            transition={{ delay: i * 0.1, duration: 0.8 }}
+            className="relative group overflow-hidden rounded-[30px] border-4 border-white shadow-xl hover:shadow-2xl transition-all duration-500"
           >
             <img 
               src={img} 
               alt={`Gallery ${i}`} 
-              className="w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="w-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0"
             />
-            <div className="absolute inset-0 bg-maroon/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <span className="text-cream text-2xl font-playfair italic">Forever ❤️</span>
+            <div className="absolute inset-0 bg-maroon/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
+              <div className="w-16 h-16 border border-white/40 rounded-full flex items-center justify-center">
+                <span className="text-white text-3xl font-playfair italic">❤️</span>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -260,44 +391,62 @@ const Gallery = () => (
 );
 
 const Contact = () => (
-  <section id="contact" className="py-20 px-4">
-    <div className="max-w-3xl mx-auto text-center">
+  <section id="contact" className="py-32 px-6 relative overflow-hidden bg-beige/10">
+    <div className="max-w-4xl mx-auto text-center relative z-10">
       <SectionDivider />
-      <h2 className="font-playfair text-4xl md:text-5xl text-maroon mb-8 italic">RSVP & Contacts</h2>
-      <p className="text-maroon/70 font-poppins mb-12 max-w-lg mx-auto leading-relaxed">
-        For any inquiries or to confirm your presence, feel free to contact the families directly.
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="font-playfair text-5xl md:text-7xl text-maroon mb-10 italic"
+      >
+        RSVP & Contact
+      </motion.h2>
+      <p className="text-maroon/60 font-playfair text-xl mb-20 max-w-lg mx-auto leading-relaxed italic">
+        Your presence would make our day truly special. Please reach out to the families for any information.
       </p>
 
-      <div className="grid sm:grid-cols-2 gap-8 mb-12">
+      <div className="grid sm:grid-cols-2 gap-10 mb-20">
         {weddingConfig.contact.phones.map((phone, i) => (
-          <div key={i} className="glass-card p-6 rounded-2xl flex flex-col items-center">
-            <span className="text-xs uppercase tracking-widest text-gold mb-4">Contact Person {i + 1}</span>
-            <span className="font-playfair text-2xl text-maroon mb-6 tracking-wide">{phone}</span>
-            <div className="flex gap-4">
+          <motion.div 
+            key={i} 
+            whileHover={{ y: -10 }}
+            className="glass-card p-10 rounded-[40px] border border-gold/10 flex flex-col items-center hover:border-gold/30 transition-all duration-500 hover:shadow-2xl"
+          >
+            <div className="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
+              {i === 0 ? '🤵' : '👰'}
+            </div>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-gold mb-4 font-bold">Contact Person {i + 1}</span>
+            <span className="font-playfair text-3xl text-maroon mb-8 tracking-wide font-bold">{phone}</span>
+            <div className="flex gap-6">
               <motion.a 
                 href={`tel:${phone.replace(/\s/g, '')}`}
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.9 }}
-                className="w-12 h-12 bg-maroon text-cream rounded-full flex items-center justify-center shadow-lg"
+                className="w-14 h-14 bg-maroon text-cream rounded-full flex items-center justify-center shadow-xl hover:bg-maroon/90 transition-all border border-gold/20"
               >
-                📞
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.79 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
               </motion.a>
               <motion.a 
                 href={`https://wa.me/${phone.replace(/[+\s]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.1, y: -5 }}
                 whileTap={{ scale: 0.9 }}
-                className="w-12 h-12 bg-green-600 text-cream rounded-full flex items-center justify-center shadow-lg"
+                className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-xl transition-all border border-white/20"
               >
-                💬
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.347-.883-.785-1.478-1.753-1.65-2.051-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.87 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.189-1.624c1.732.944 3.691 1.441 5.682 1.442h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
               </motion.a>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      <div className="text-maroon/60 font-poppins text-sm italic">
+      <div className="text-maroon/40 font-poppins text-[10px] tracking-[0.4em] uppercase border-t border-gold/10 pt-12">
         {weddingConfig.contact.address}
       </div>
     </div>
@@ -319,46 +468,103 @@ function EnvelopeOverlay({ onOpen }) {
   const handleClick = () => {
     if (!opened) {
       setOpened(true);
-      setTimeout(onOpen, 1100);
+      setTimeout(onOpen, 1500);
     }
   };
-  const sealBg = 'radial-gradient(ellipse at 30% 30%, #d7b865, #b9952a 60%, #9e7f1f)';
+  
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-ivory [perspective:1200px]">
-      <div className="absolute inset-0 flex">
-        <motion.div
-          className="flex-1 bg-white border border-gold/20 shadow-2xl"
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: opened ? -110 : 0 }}
-          transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
-          style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
-        />
-        <motion.div
-          className="flex-1 bg-white border border-gold/20 shadow-2xl"
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: opened ? 110 : 0 }}
-          transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
-          style={{ transformOrigin: 'right center', backfaceVisibility: 'hidden' }}
-        />
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-cream [perspective:2000px] overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+          </pattern>
+          <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
       </div>
-      <motion.button
-        onClick={handleClick}
-        initial={{ scale: 1, opacity: 1 }}
-        animate={{ scale: opened ? 0 : 1, opacity: opened ? 0 : 1 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-        aria-label="Open invitation"
-        className="relative grid place-items-center rounded-full shadow-2xl text-white"
-        style={{
-          width: 'min(40vw, 160px)',
-          height: 'min(40vw, 160px)',
-          background: sealBg,
-          letterSpacing: '1px',
-          fontFamily: '"Playfair Display", serif',
-          fontSize: 'clamp(20px, 5vw, 34px)'
-        }}
-      >
-        {weddingConfig.names.monogram || 'Y & A'}
-      </motion.button>
+
+      <div className="relative w-[90vw] max-w-[500px] aspect-[3/4] flex items-center justify-center">
+        {/* Left Door */}
+        <motion.div
+          className="absolute inset-0 flex"
+          initial={false}
+        >
+          <motion.div
+            className="flex-1 bg-white border-r border-gold/20 shadow-2xl relative overflow-hidden"
+            animate={{ rotateY: opened ? -120 : 0 }}
+            transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+            style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden', zIndex: 2 }}
+          >
+            <div className="absolute inset-4 border border-gold/10"></div>
+            <div className="absolute inset-0 flex items-center justify-end pr-4 opacity-20">
+              <div className="w-1 h-32 bg-gold/30 rounded-full"></div>
+            </div>
+          </motion.div>
+
+          {/* Right Door */}
+          <motion.div
+            className="flex-1 bg-white border-l border-gold/20 shadow-2xl relative overflow-hidden"
+            animate={{ rotateY: opened ? 120 : 0 }}
+            transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+            style={{ transformOrigin: 'right center', backfaceVisibility: 'hidden', zIndex: 2 }}
+          >
+            <div className="absolute inset-4 border border-gold/10"></div>
+            <div className="absolute inset-0 flex items-center justify-start pl-4 opacity-20">
+              <div className="w-1 h-32 bg-gold/30 rounded-full"></div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Inner Content (Revealed) */}
+        <div className="absolute inset-0 bg-cream flex flex-col items-center justify-center p-12 text-center border border-gold/10 shadow-inner">
+          <div className="w-24 h-24 border border-gold/20 rounded-full mb-8 flex items-center justify-center">
+            <span className="font-playfair text-3xl text-gold">Y & A</span>
+          </div>
+          <h2 className="font-playfair text-2xl text-maroon mb-4 tracking-widest uppercase">The Wedding of</h2>
+          <div className="font-playfair text-4xl text-maroon italic">Yashraj & Aditi</div>
+        </div>
+
+        {/* Seal Button */}
+        <motion.button
+          onClick={handleClick}
+          initial={{ scale: 1 }}
+          animate={{ 
+            scale: opened ? 0 : 1,
+            rotate: opened ? 180 : 0,
+            opacity: opened ? 0 : 1
+          }}
+          transition={{ duration: 0.8, ease: "backIn" }}
+          className="absolute z-[10] w-32 h-32 rounded-full shadow-[0_20px_50px_rgba(158,127,31,0.4)] cursor-pointer group"
+          style={{
+            background: 'radial-gradient(circle at 30% 30%, #d7b865, #b9952a 60%, #9e7f1f)',
+          }}
+        >
+          <div className="absolute inset-2 border-2 border-white/20 rounded-full"></div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+            <span className="font-playfair text-xl tracking-widest font-bold">OPEN</span>
+            <motion.span 
+              animate={{ y: [0, 5, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="text-xs mt-1 opacity-80"
+            >Tap here</motion.span>
+          </div>
+          
+          {/* Decorative Ring */}
+          <div className="absolute inset-[-10px] border border-gold/20 rounded-full animate-pulse"></div>
+        </motion.button>
+      </div>
+
+      {/* Footer text */}
+      {!opened && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute bottom-12 text-gold/60 font-poppins text-[10px] tracking-[0.4em] uppercase"
+        >
+          A Special Day Awaits
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -437,18 +643,23 @@ export default function App() {
   };
 
   return (
-    <div className="app selection:bg-gold selection:text-cream overflow-x-hidden bg-cream">
+    <div className="app selection:bg-gold selection:text-cream overflow-x-hidden bg-cream relative">
       {showOverlay && <EnvelopeOverlay onOpen={handleEnvelopeOpen} />}
+      
+      <FallingPetals />
+
+      {/* Background Music Toggle */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         onClick={toggleMute}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white/80 backdrop-blur-sm border border-gold/30 rounded-full flex items-center justify-center shadow-xl text-maroon hover:bg-white transition-colors"
+        className="fixed bottom-8 right-8 z-[90] w-14 h-14 bg-white/90 backdrop-blur-md border border-gold/30 rounded-full flex items-center justify-center shadow-2xl text-maroon hover:bg-white transition-all group"
       >
+        <div className="absolute inset-[-4px] border border-gold/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500"></div>
         {muted ? (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5zM22 9l-6 6M16 9l6 6" /></svg>
         ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-pulse"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>
         )}
       </motion.button>
 
@@ -457,7 +668,7 @@ export default function App() {
         href="#contact"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-gold text-cream px-8 py-3 rounded-full font-poppins text-[10px] tracking-[0.2em] uppercase shadow-2xl hover:bg-maroon transition-all"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] bg-maroon text-cream px-10 py-4 rounded-full font-poppins text-[10px] tracking-[0.3em] uppercase shadow-2xl hover:bg-gold transition-all border border-gold/30"
       >
         RSVP Now
       </motion.a>
