@@ -251,12 +251,30 @@ const Events = () => (
                 <div className="space-y-4 border-t border-gold/10 pt-6">
                   <div className="flex items-start gap-4">
                     <span className="text-gold text-xl">📍</span>
-                    <div>
+                    <div className="flex-1">
                       <p className="text-maroon/80 font-poppins font-semibold">{event.location}</p>
                       {event.address && <p className="text-maroon/50 text-sm font-poppins italic mt-1">{event.address}</p>}
                     </div>
                   </div>
                   
+                  {event.navigateLink && (
+                    <div className="pt-4">
+                      <motion.a 
+                        href={event.navigateLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="inline-flex items-center gap-2 text-gold hover:text-maroon text-[10px] uppercase tracking-[0.2em] font-bold transition-colors"
+                      >
+                        <span>Get Directions</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </motion.a>
+                    </div>
+                  )}
+
                   {event.note && (
                     <div className="mt-6 flex items-center gap-3 text-gold text-[11px] uppercase tracking-widest font-bold">
                       <span className="w-8 h-[1px] bg-gold/30"></span>
@@ -350,46 +368,6 @@ const Venue = () => (
   </section>
 );
 
-const Gallery = () => (
-  <section id="gallery" className="py-32 bg-cream relative overflow-hidden">
-    <div className="max-w-7xl mx-auto px-6">
-      <SectionDivider />
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center font-playfair text-5xl md:text-7xl text-maroon mb-24 italic"
-      >
-        Cherished Moments
-      </motion.h2>
-      
-      <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
-        {weddingConfig.images.gallery.map((img, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1, duration: 0.8 }}
-            className="relative group overflow-hidden rounded-[30px] border-4 border-white shadow-xl hover:shadow-2xl transition-all duration-500"
-          >
-            <img 
-              src={img} 
-              alt={`Gallery ${i}`} 
-              className="w-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[20%] group-hover:grayscale-0"
-            />
-            <div className="absolute inset-0 bg-maroon/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
-              <div className="w-16 h-16 border border-white/40 rounded-full flex items-center justify-center">
-                <span className="text-white text-3xl font-playfair italic">❤️</span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
 const Contact = () => (
   <section id="contact" className="py-32 px-6 relative overflow-hidden bg-beige/10">
     <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -414,7 +392,7 @@ const Contact = () => (
             className="glass-card p-10 rounded-[40px] border border-gold/10 flex flex-col items-center hover:border-gold/30 transition-all duration-500 hover:shadow-2xl"
           >
             <div className="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
-              {i === 0 ? '🤵' : '👰'}
+              {i === 0 ? '🤵' : '🤵'}
             </div>
             <span className="text-[10px] uppercase tracking-[0.3em] text-gold mb-4 font-bold">Contact Person {i + 1}</span>
             <span className="font-playfair text-3xl text-maroon mb-8 tracking-wide font-bold">{phone}</span>
@@ -677,7 +655,6 @@ export default function App() {
       <Couple />
       <Events />
       <Venue />
-      <Gallery />
       <Contact />
       <Footer />
     </div>
