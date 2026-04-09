@@ -49,13 +49,15 @@ const SectionDivider = () => (
         <path d="M0,50 Q300,0 600,50 T1200,50" fill="none" stroke="currentColor" strokeWidth="1" />
       </svg>
     </div>
-    <div className="h-[1px] w-16 bg-gold/30"></div>
-    <div className="mx-6 text-gold opacity-40">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+    <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+    <div className="mx-8 text-gold flex items-center gap-4">
+      <div className="text-2xl opacity-40">❈</div>
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M12 2L14.5 9H21L15.5 13.5L18 21L12 16.5L6 21L8.5 13.5L3 9H9.5L12 2Z" />
       </svg>
+      <div className="text-2xl opacity-40">❈</div>
     </div>
-    <div className="h-[1px] w-16 bg-gold/30"></div>
+    <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
   </div>
 );
 
@@ -110,10 +112,10 @@ const Hero = ({ onExplore }) => {
               transition={{ delay: 0.5 + (i * 0.1) }}
               className="flex flex-col items-center"
             >
-              <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full border border-gold/20 mb-3 bg-white/30 backdrop-blur-sm">
-                <span className="text-2xl md:text-4xl font-playfair text-maroon">{item.value.toString().padStart(2, '0')}</span>
+              <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full border-2 border-gold/40 mb-3 bg-white/60 backdrop-blur-md shadow-lg group">
+                <span className="text-2xl md:text-4xl font-playfair text-maroon font-bold drop-shadow-sm group-hover:scale-110 transition-transform">{item.value.toString().padStart(2, '0')}</span>
               </div>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-poppins">{item.label}</span>
+              <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-maroon font-poppins font-bold bg-white/40 px-2 py-1 rounded-full">{item.label}</span>
             </motion.div>
           ))}
         </div>
@@ -235,7 +237,8 @@ const Events = () => (
             className={`flex flex-col md:flex-row items-center gap-12 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
           >
             <div className="flex-1 w-full">
-              <div className={`glass-card p-10 rounded-3xl relative overflow-hidden border border-gold/10 hover:border-gold/30 transition-all duration-500 hover:shadow-2xl group`}>
+              <div className={`glass-card p-10 rounded-3xl relative overflow-hidden border-2 border-gold/20 hover:border-gold/40 transition-all duration-500 hover:shadow-2xl group bg-white/40 backdrop-blur-md`}>
+                <div className="absolute -top-10 -right-10 w-32 h-32 border-2 border-gold/10 rounded-full group-hover:scale-110 transition-transform"></div>
                 <div className="absolute top-0 right-0 p-6 text-6xl opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700">
                   {event.icon}
                 </div>
@@ -378,7 +381,7 @@ const Contact = () => (
         viewport={{ once: true }}
         className="font-playfair text-5xl md:text-7xl text-maroon mb-10 italic"
       >
-        RSVP & Contact
+        Stay in Touch
       </motion.h2>
       <p className="text-maroon/60 font-playfair text-xl mb-20 max-w-lg mx-auto leading-relaxed italic">
         Your presence would make our day truly special. Please reach out to the families for any information.
@@ -389,8 +392,9 @@ const Contact = () => (
           <motion.div 
             key={i} 
             whileHover={{ y: -10 }}
-            className="glass-card p-10 rounded-[40px] border border-gold/10 flex flex-col items-center hover:border-gold/30 transition-all duration-500 hover:shadow-2xl"
+            className="glass-card p-10 rounded-[40px] border-2 border-gold/20 flex flex-col items-center hover:border-gold/40 transition-all duration-500 hover:shadow-2xl bg-white/40 backdrop-blur-md relative overflow-hidden"
           >
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 border-2 border-gold/10 rounded-full"></div>
             <div className="w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
               {i === 0 ? '🤵' : '🤵'}
             </div>
@@ -463,33 +467,70 @@ function EnvelopeOverlay({ onOpen }) {
       </div>
 
       <div className="relative w-[90vw] max-w-[500px] aspect-[3/4] flex items-center justify-center">
-        {/* Left Door */}
+        {/* Doors Wrapper */}
         <motion.div
           className="absolute inset-0 flex"
           initial={false}
         >
+          {/* Left Door */}
           <motion.div
-            className="flex-1 bg-white border-r border-gold/20 shadow-2xl relative overflow-hidden"
+            className="flex-1 bg-[#fffdf5] border-r border-gold/30 shadow-2xl relative overflow-hidden"
             animate={{ rotateY: opened ? -120 : 0 }}
             transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden', zIndex: 2 }}
           >
-            <div className="absolute inset-4 border border-gold/10"></div>
-            <div className="absolute inset-0 flex items-center justify-end pr-4 opacity-20">
-              <div className="w-1 h-32 bg-gold/30 rounded-full"></div>
+            {/* Elegant Background Pattern */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#C9A84C 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+            
+            <div className="absolute inset-6 border-2 border-gold/30 rounded-sm"></div>
+            <div className="absolute inset-8 border border-gold/10 rounded-sm"></div>
+            
+            {/* Corner Decorations */}
+            <div className="absolute top-10 left-10 w-12 h-12 border-t-2 border-l-2 border-gold/50 rounded-tl-xl"></div>
+            <div className="absolute bottom-10 left-10 w-12 h-12 border-b-2 border-l-2 border-gold/50 rounded-bl-xl"></div>
+            
+            {/* Indian Mandala Design Left */}
+            <div className="absolute -left-24 -top-24 w-72 h-72 border-[1px] border-gold/20 rounded-full opacity-30"></div>
+            <div className="absolute -left-12 -top-12 w-48 h-48 border-[1px] border-gold/30 rounded-full opacity-30"></div>
+            
+            {/* Om Symbols */}
+            <div className="absolute left-10 top-20 text-gold/20 text-6xl font-serif">ॐ</div>
+            <div className="absolute left-10 bottom-20 text-gold/20 text-6xl font-serif">ॐ</div>
+            
+            {/* Center Handle Line */}
+            <div className="absolute inset-0 flex items-center justify-end pr-2 opacity-30">
+              <div className="w-1.5 h-48 bg-gradient-to-b from-transparent via-gold/50 to-transparent rounded-full"></div>
             </div>
           </motion.div>
 
           {/* Right Door */}
           <motion.div
-            className="flex-1 bg-white border-l border-gold/20 shadow-2xl relative overflow-hidden"
+            className="flex-1 bg-[#fffdf5] border-l border-gold/30 shadow-2xl relative overflow-hidden"
             animate={{ rotateY: opened ? 120 : 0 }}
             transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             style={{ transformOrigin: 'right center', backfaceVisibility: 'hidden', zIndex: 2 }}
           >
-            <div className="absolute inset-4 border border-gold/10"></div>
-            <div className="absolute inset-0 flex items-center justify-start pl-4 opacity-20">
-              <div className="w-1 h-32 bg-gold/30 rounded-full"></div>
+            {/* Elegant Background Pattern */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#C9A84C 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+
+            <div className="absolute inset-6 border-2 border-gold/30 rounded-sm"></div>
+            <div className="absolute inset-8 border border-gold/10 rounded-sm"></div>
+            
+            {/* Corner Decorations */}
+            <div className="absolute top-10 right-10 w-12 h-12 border-t-2 border-r-2 border-gold/50 rounded-tr-xl"></div>
+            <div className="absolute bottom-10 right-10 w-12 h-12 border-b-2 border-r-2 border-gold/50 rounded-br-xl"></div>
+
+            {/* Indian Mandala Design Right */}
+            <div className="absolute -right-24 -bottom-24 w-72 h-72 border-[1px] border-gold/20 rounded-full opacity-30"></div>
+            <div className="absolute -right-12 -bottom-12 w-48 h-48 border-[1px] border-gold/30 rounded-full opacity-30"></div>
+            
+            {/* Om Symbols - Correctly Oriented */}
+            <div className="absolute right-10 top-20 text-gold/20 text-6xl font-serif">ॐ</div>
+            <div className="absolute right-10 bottom-20 text-gold/20 text-6xl font-serif">ॐ</div>
+            
+            {/* Center Handle Line */}
+            <div className="absolute inset-0 flex items-center justify-start pl-2 opacity-30">
+              <div className="w-1.5 h-48 bg-gradient-to-b from-transparent via-gold/50 to-transparent rounded-full"></div>
             </div>
           </motion.div>
         </motion.div>
@@ -513,23 +554,22 @@ function EnvelopeOverlay({ onOpen }) {
             opacity: opened ? 0 : 1
           }}
           transition={{ duration: 0.8, ease: "backIn" }}
-          className="absolute z-[10] w-32 h-32 rounded-full shadow-[0_20px_50px_rgba(158,127,31,0.4)] cursor-pointer group"
+          className="absolute z-[10] w-48 h-48 rounded-full shadow-[0_20px_60px_rgba(158,127,31,0.5)] cursor-pointer group flex items-center justify-center overflow-hidden"
           style={{
             background: 'radial-gradient(circle at 30% 30%, #d7b865, #b9952a 60%, #9e7f1f)',
           }}
         >
-          <div className="absolute inset-2 border-2 border-white/20 rounded-full"></div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-            <span className="font-playfair text-xl tracking-widest font-bold">OPEN</span>
-            <motion.span 
-              animate={{ y: [0, 5, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="text-xs mt-1 opacity-80"
-            >Tap here</motion.span>
+          <div className="absolute inset-2 border-2 border-white/30 rounded-full"></div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+            <img 
+              src="/assets/images/ganesh.png" 
+              alt="Ganesh" 
+              className="w-32 h-32 drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:scale-110 transition-transform duration-500"
+            />
           </div>
           
           {/* Decorative Ring */}
-          <div className="absolute inset-[-10px] border border-gold/20 rounded-full animate-pulse"></div>
+          <div className="absolute inset-[-15px] border-2 border-gold/30 rounded-full animate-pulse"></div>
         </motion.button>
       </div>
 
@@ -641,14 +681,14 @@ export default function App() {
         )}
       </motion.button>
 
-      {/* Floating RSVP Button */}
+      {/* Floating Stay in Touch Button */}
       <motion.a
         href="#contact"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] bg-maroon text-cream px-10 py-4 rounded-full font-poppins text-[10px] tracking-[0.3em] uppercase shadow-2xl hover:bg-gold transition-all border border-gold/30"
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] bg-maroon text-cream px-10 py-4 rounded-full font-poppins text-[10px] tracking-[0.3em] uppercase shadow-2xl hover:bg-gold transition-all border-2 border-gold/50 font-bold"
       >
-        RSVP Now
+        Stay in Touch
       </motion.a>
 
       <Hero onExplore={scrollToInvitation} />
